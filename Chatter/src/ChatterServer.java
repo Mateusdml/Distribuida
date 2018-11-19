@@ -12,6 +12,7 @@ public class ChatterServer extends Thread {
 	private static Socket clientSocket = null;
 	// Lista de clientes
 	public static ArrayList<ChatterServer> clients = new ArrayList<ChatterServer>();
+	//Entrada e Saída
 	private DataInputStream input = null;
 	private DataOutputStream output = null;
 	private String username = "usrname";
@@ -52,8 +53,8 @@ public class ChatterServer extends Thread {
 					+ "Digite: rename, para renomear \n" + "Digite: bye, para sair do chat \n";
 
 			// Envia tutorial e lista de clientes conectados
-			//output.writeUTF(tutorial);
-			//list();
+			output.writeUTF(tutorial);
+			list();
 			System.out.println("lendo mensagem");
 			// Lê primeira mensagem do chat que o cliente envia
 			String message = input.readUTF();
@@ -86,6 +87,7 @@ public class ChatterServer extends Thread {
 					// Comando desconhecido
 					this.output.writeUTF("System = Comando desconhecido, digite help para tutorial. " + getDateTime());
 				}
+				message = input.readUTF();
 			}while(!"bye".equalsIgnoreCase(message));
 			
 		}catch(IOException e){System.out.println(e);}
@@ -145,7 +147,7 @@ public class ChatterServer extends Thread {
 	}
 
 	public void SendAllSystem(String message) {
-//Varre array e manda mensagem de sistema para todos clientes conectados
+		//Varre array e manda mensagem de sistema para todos clientes conectados
 		for (int i = 0; i < clients.size(); i++) {
 			if (clients.get(i) != null && clients.get(i) != this) {
 				try {
@@ -161,7 +163,7 @@ public class ChatterServer extends Thread {
 	}
 
 	public boolean SendUser(String message) {
-//Busca usuário para enviar a mensagem
+		//Busca usuário para enviar a mensagem
 
 //Divide a string para separar comandos da mensagem, nome de usuário ficará na 3ª posição do array
 		String[] splited = message.split("\\s+");

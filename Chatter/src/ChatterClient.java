@@ -75,7 +75,7 @@ public class ChatterClient implements Runnable {
    * 
    * @see java.lang.Runnable#run()
    */
-  @SuppressWarnings("deprecation")
+ @SuppressWarnings("deprecation")
 public void run() {
     /*
      * Keep on reading from the socket till we receive "Bye" from the
