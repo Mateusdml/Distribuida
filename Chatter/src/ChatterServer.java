@@ -80,7 +80,7 @@ public class ChatterServer extends Thread {
 					} else {
 						output.writeUTF("\n System = Username já existente, favor informar outro" + getDateTime());
 					}
-				} else if (message.trim().equals("help")) {
+				} else if (message.toLowerCase().trim().equals("help")) {
 					// Exibe tutorial
 					output.writeUTF(tutorial);
 				} else {
@@ -187,7 +187,7 @@ public class ChatterServer extends Thread {
 	public void list() {
 		for (int i = 0; i < clients.size(); i++) {
 			try {
-				this.output.writeUTF(i + " - " + clients.get(i).getName());
+				this.output.writeUTF(i + " - " + clients.get(i).getUsername());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
