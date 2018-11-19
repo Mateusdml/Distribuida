@@ -13,7 +13,7 @@ public class InputClient extends Thread{
 			input  = new DataInputStream(socket.getInputStream());
 			this.client = socket;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Conexão encerrado");
 		}
 	}
 	
@@ -24,7 +24,7 @@ public class InputClient extends Thread{
 			}
 				
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Conexão encerrado");
 		}
 		
 	}

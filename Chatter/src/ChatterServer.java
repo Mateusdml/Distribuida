@@ -12,7 +12,7 @@ public class ChatterServer extends Thread {
 	private static Socket clientSocket = null;
 	// Lista de clientes
 	public static ArrayList<ChatterServer> clients = new ArrayList<ChatterServer>();
-	//Entrada e Saída
+	//Entrada e Saï¿½da
 	private DataInputStream input = null;
 	private DataOutputStream output = null;
 	private String username = "usrname";
@@ -60,30 +60,31 @@ public class ChatterServer extends Thread {
 			output.writeUTF(tutorial);
 			list();
 			System.out.println("lendo mensagem");
-			// Lê primeira mensagem do chat que o cliente envia
+			// Lï¿½ primeira mensagem do chat que o cliente envia
 			String message = input.readUTF();
 
-			// Se a mensagem não for bye, avisa a todos que um novo usuário se conectou
+			// Se a mensagem nï¿½o for bye, avisa a todos que um novo usuï¿½rio se conectou
 			do {// tratamento das mensagens
 				if (message.toLowerCase().startsWith("send -all")) {
 					// Envia para todos
 					SendAll(message);
 				} else if (message.toLowerCase().startsWith("send -user")) {
-					// Envia para um usário, caso usuário não seja encontrado, informa ao cliente.
-					// Método SendUser retorna true caso o usuário seja encontrado, falso se não.
+					// Envia para um usï¿½rio, caso usuï¿½rio nï¿½o seja encontrado, informa ao cliente.
+					// Mï¿½todo SendUser retorna true caso o usuï¿½rio seja encontrado, falso se nï¿½o.
 					if (!SendUser(message)) {
-						output.writeUTF("\nSystem = Usuário não encontrado at " + getDateTime());
-					}
+						output.writeUTF("\nSystem = Usuï¿½rio nï¿½o encontrado at " + getDateTime());
+					}else{output.writeUTF("Mensagem enviada\n");}
 				} else if (message.toLowerCase().equals("list")) {
-					// Lista usuários
+					// Lista usuï¿½rios
 					list();
 				} else if (message.toLowerCase().startsWith("rename")) {
-					// Tenta renomear usuário
+					// Tenta renomear usuï¿½rio
 					String[] splited = message.split(" ");
 					if (!UsrNameExists(splited[1])) {
 						this.username = splited[1];
+                                                output.writeUTF("\n System = Renomeado com sucesso" + getDateTime());
 					} else {
-						output.writeUTF("\n System = Username já existente, favor informar outro " + getDateTime());
+						output.writeUTF("\n System = Username jï¿½ existente, favor informar outro " + getDateTime());
 					}
 				} else if (message.toLowerCase().trim().equals("help")) {
 					// Exibe tutorial
@@ -95,9 +96,9 @@ public class ChatterServer extends Thread {
 				message = input.readUTF();
 			}while(!"bye".equalsIgnoreCase(message));
 			
-		}catch(IOException e){System.out.println(e);}
+		}catch(IOException e){System.out.println("Usuario saiu");}
 
-		SendAllSystem("Usuário " + username + " saiu do chat");
+		SendAllSystem("Usuï¿½rio " + username + " saiu do chat");
 
 		for (int i = 0; i < clients.size(); i++)  {
 			if (clients.get(i) == this) {
@@ -106,7 +107,7 @@ public class ChatterServer extends Thread {
 		}
 
 		try {
-			this.output.writeUTF("Você foi desconectado");
+			this.output.writeUTF("Vocï¿½ foi desconectado");
 			output.close();
 			input.close();
 			clientSocket.close();
@@ -168,27 +169,27 @@ public class ChatterServer extends Thread {
 	}
 
 	public boolean SendUser(String message) {
-		//Busca usuário para enviar a mensagem
+		//Busca usuï¿½rio para enviar a mensagem
 
-//Divide a string para separar comandos da mensagem, nome de usuário ficará na 3ª posição do array
+//Divide a string para separar comandos da mensagem, nome de usuï¿½rio ficarï¿½ na 3ï¿½ posiï¿½ï¿½o do array
 		String[] splited = message.split(" ");
 
-//Varre array em busca do usuário
+//Varre array em busca do usuï¿½rio
 		for (int i = 0; i < clients.size(); i++) {
 			
 			if (clients.get(i).getUsername().equals(splited[2]) && clients.get(i) != this) {
 				try {
-					// Se encontra usuário, manda mensagem para ele
+					// Se encontra usuï¿½rio, manda mensagem para ele
 					
 					String address = ChatterServer.clientSocket.getInetAddress().toString();
 					String port = String.valueOf(ChatterServer.clientSocket.getPort());
 					String msg = (address + ":" + port + " / " + this.username + " (Privado) : " + message+ " At: "
 							+ getDateTime());
 					clients.get(i).output.writeUTF(msg);
-					this.output.writeUTF("Mensagem enviada para: " + splited[2]);
+					//this.output.writeUTF("Mensagem enviada para: " + splited[2]);
 					return true;
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.out.println("Erro no senduser");
 				}
 			}
 		}
@@ -223,16 +224,16 @@ public class ChatterServer extends Thread {
 		System.out.println("========================================");
 		System.out.println("================Servidor================");
 		System.out.println("========================================");
-		System.out.println("Iniciando conexão na porta: " + port + "...");
+		System.out.println("Iniciando conexï¿½o na porta: " + port + "...");
 
-		// Abre conexão na porta default
+		// Abre conexï¿½o na porta default
 		try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("Conexão Aberta na porta: " + port + "...");
+			System.out.println("Conexï¿½o Aberta na porta: " + port + "...");
 			clients = new ArrayList<ChatterServer>();
 			while (true) {
 				try {
-					System.out.println("Aguardando conexão...");
+					System.out.println("Aguardando conexï¿½o...");
 					Socket socket = serverSocket.accept();
 					System.out.println("Cliente conectado...");
 					Thread t = new ChatterServer(socket);
