@@ -40,6 +40,10 @@ public class ChatterServer extends Thread {
 				if (!UsrNameExists(message) && !message.equals("usrname")) {
 					this.username = message;
 					output.writeUTF("\n Username cadastrado com sucesso.\n");
+					String cabecalho = 	("===================================\n"
+										+"\n       Cliente        "+message+
+										"\n===================================\n");
+					output.writeUTF(cabecalho);
 					break;
 				} else {
 					output.writeUTF("\n Username ja existente, favor informar outro\n");
@@ -171,15 +175,14 @@ public class ChatterServer extends Thread {
 
 //Varre array em busca do usuário
 		for (int i = 0; i < clients.size(); i++) {
-			System.out.println(splited[2]+"entrou em senduser");
-			if (clients.get(i).getUsername().equals(splited[2])) {
+			
+			if (clients.get(i).getUsername().equals(splited[2]) && clients.get(i) != this) {
 				try {
-					System.out.println("encontrou usuário");
 					// Se encontra usuário, manda mensagem para ele
 					
 					String address = ChatterServer.clientSocket.getInetAddress().toString();
 					String port = String.valueOf(ChatterServer.clientSocket.getPort());
-					String msg = (address + ":" + port + " / " + this.username + " (Privado) : " + message + " At: "
+					String msg = (address + ":" + port + " / " + this.username + " (Privado) : " + message+ " At: "
 							+ getDateTime());
 					clients.get(i).output.writeUTF(msg);
 					this.output.writeUTF("Mensagem enviada para: " + splited[2]);
