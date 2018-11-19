@@ -68,17 +68,18 @@ public class ChatterServer extends Thread {
 					// Envia para um usário, caso usuário não seja encontrado, informa ao cliente.
 					// Método SendUser retorna true caso o usuário seja encontrado, falso se não.
 					if (!SendUser(message)) {
-						output.writeUTF(" System = \n Usuário não encontrado" + getDateTime());
+						output.writeUTF("\nSystem = Usuário não encontrado at " + getDateTime());
 					}
 				} else if (message.toLowerCase().equals("list")) {
 					// Lista usuários
 					list();
 				} else if (message.toLowerCase().startsWith("rename")) {
 					// Tenta renomear usuário
-					if (!UsrNameExists(message)) {
-						this.username = message;
+					String[] splited = message.split(" ");
+					if (!UsrNameExists(splited[1])) {
+						this.username = splited[1];
 					} else {
-						output.writeUTF("\n System = Username já existente, favor informar outro" + getDateTime());
+						output.writeUTF("\n System = Username já existente, favor informar outro " + getDateTime());
 					}
 				} else if (message.toLowerCase().trim().equals("help")) {
 					// Exibe tutorial
@@ -166,14 +167,21 @@ public class ChatterServer extends Thread {
 		//Busca usuário para enviar a mensagem
 
 //Divide a string para separar comandos da mensagem, nome de usuário ficará na 3ª posição do array
-		String[] splited = message.split("\\s+");
+		String[] splited = message.split(" ");
 
 //Varre array em busca do usuário
 		for (int i = 0; i < clients.size(); i++) {
-			if (clients.get(i).getName().equals(splited[2]) && clients.get(i) != this) {
+			System.out.println(splited[2]+"entrou em senduser");
+			if (clients.get(i).getUsername().equals(splited[2])) {
 				try {
+					System.out.println("encontrou usuário");
 					// Se encontra usuário, manda mensagem para ele
-					clients.get(i).output.writeUTF(message);
+					
+					String address = ChatterServer.clientSocket.getInetAddress().toString();
+					String port = String.valueOf(ChatterServer.clientSocket.getPort());
+					String msg = (address + ":" + port + " / " + this.username + " (Privado) : " + message + " At: "
+							+ getDateTime());
+					clients.get(i).output.writeUTF(msg);
 					this.output.writeUTF("Mensagem enviada para: " + splited[2]);
 					return true;
 				} catch (IOException e) {
